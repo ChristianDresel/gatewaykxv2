@@ -1,0 +1,16 @@
+batnr=
+ipv6=
+ipv6range=
+ipv4=
+ipv4range=
+dhcpstart=
+dhcpende=
+httpport=
+
+
+/etc/fastd/fff.bat"$batnr"
+/etc/network/interfaces.d/bat"$batnr"
+/etc/apache2/sites-available/bat"$batnr".conf
+/etc/apache2/ports.conf
+/etc/dhcp/dhcpd.conf
+/etc/radvd.conf
