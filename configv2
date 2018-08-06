@@ -51,7 +51,7 @@ echo "#!/bin/bash
 batctl -m bat$bat gw_mode server 256000
 ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
 # x setzen
-chmod a=x /etc/fastd/fff.bat"$bat"/up.sh
+chmod a+x /etc/fastd/fff.bat"$bat"/up.sh
 
 echo "#!/bin/bash
 return 0" > /etc/fastd/fff.bat"$bat"/verify.sh
