@@ -12,22 +12,25 @@ ipv4netmask="255.255.248.0"
 dhcpstart="1.2.3.0" # Startadresse von DHCP
 dhcpende="1.2.4.0" # Endandresse von DHCP
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
+fastdport=10000
+batbase=0
+httpportbase=2342
 
 # Ab hier nichts mehr ändern! #
 
-fastdport=10000
+
 fastdportbase=$fastdport
 while grep $fastdport /etc/fastd/fff.bat*/fff.bat*.conf* &>/dev/null ; do ((fastdport+=1)); done
 echo "Wir nutzen $fastdport Port für fastd"
 ## $fastdport = port für fastdport
 
-batbase=0
+
 bat=$batbase
 while grep bat$bat /etc/systemd/system/fastdbat* &>/dev/null ; do ((bat+=1)); done
 echo "Wir nutzen $bat Nummer für Batman Interface"
 ## $bat = bat interface
 
-httpportbase=2342
+
 httpport=$httpportbase
 while grep $httpport /etc/apache2/sites-available* &>/dev/null ; do ((httpport+=1)); done
 echo "Wir nutzen $httpport Port für http Server"
