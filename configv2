@@ -1,20 +1,38 @@
-batnr=
+Hoodname=
 ipv6=
 ipv6range=
 ipv4=
 ipv4range=
 dhcpstart=
 dhcpende=
-httpport=
-fastdport=
+
 fastdinterfacename=
 
 
-/etc/fastd/fff.bat"$batnr"
-/etc/network/interfaces.d/bat"$batnr"
-/etc/apache2/sites-available/bat"$batnr".conf
+
+fastdport=10000
+fastdportbase=$fastdport
+while grep $fastdport /etc/fastd/fff.bat*/fff.bat*.conf* &>/dev/null ; do ((fastdport+=1)); done
+//$bat = bat interface
+
+batbase=0
+bat=$batbase
+while grep bat$bat /etc/systemd/system/fastdbat* &>/dev/null ; do ((bat+=1)); done
+//$bat = bat interface
+
+httpportbase=2342
+httpport=$httpportbase
+while grep $httpport /etc/apache2/sites-available* &>/dev/null ; do ((bat+=1)); done
+// $httpport = port für httpserver
+
+
+// Folgende Dateien müssen angelegt oder bearbeitet werden:
+/etc/fastd/fff.bat"$bat"
+/etc/network/interfaces.d/bat"$bat"
+/etc/apache2/sites-available/bat"$bat".conf
 /etc/apache2/ports.conf
 /etc/dhcp/dhcpd.conf
 /etc/radvd.conf
-/etc/systemd/system/fastdbat"$batnr".service
-/etc/systemd/system/alfredbat"$batnr".service
+/etc/systemd/system/fastdbat"$bat".service
+/etc/systemd/system/alfredbat"$bat".service
+/usr/sbin/alfred-c
