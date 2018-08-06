@@ -6,7 +6,9 @@ Hoodname="BLABLA"
 ipv6="fd43:5602:29bd:18::X/64" # die eigene v6 ULA Adresse mit Netzgröße
 ipv6net="fd43:5602:29bd:18::/64" # Das ULA Subnetz für die Hood
 ipv4="1.2.3.4/22" # die eigene v4 Adresse mit Netzgröße
+ipv4withoutnet="1.2.3.4"
 ipv4net="1.2.3.0/22" # das v4 Subnetz der Hood
+ipv4netmask="255.255.248.0"
 dhcpstart="1.2.3.0" # Startadresse von DHCP
 dhcpende="1.2.4.0" # Endandresse von DHCP
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
@@ -16,16 +18,19 @@ fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
 fastdport=10000
 fastdportbase=$fastdport
 while grep $fastdport /etc/fastd/fff.bat*/fff.bat*.conf* &>/dev/null ; do ((fastdport+=1)); done
+echo "Wir nutzen $fastdport Port für fastd"
 ## $fastdport = port für fastdport
 
 batbase=0
 bat=$batbase
 while grep bat$bat /etc/systemd/system/fastdbat* &>/dev/null ; do ((bat+=1)); done
+echo "Wir nutzen $bat Nummer für Batman Interface"
 ## $bat = bat interface
 
 httpportbase=2342
 httpport=$httpportbase
-while grep $httpport /etc/apache2/sites-available* &>/dev/null ; do ((bat+=1)); done
+while grep $httpport /etc/apache2/sites-available* &>/dev/null ; do ((httpport+=1)); done
+echo "Wir nutzen $httpport Port für http Server"
 ## $httpport = port für httpserver
 
 
@@ -38,7 +43,8 @@ echo "#!/bin/sh
 
 echo "#!/bin/sh
 /sbin/ifup $INTERFACE
-batctl -m bat$bat gw_mode server 256000" > /etc/fastd/fff.bat"$bat"/up.sh
+batctl -m bat$bat gw_mode server 256000
+ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
 
 echo "#!/bin/sh
 return 0" > /etc/fastd/fff.bat"$bat"/verify.sh
@@ -103,10 +109,109 @@ iface $fastdinterfacename inet manual
     post-down ifconfig $IFACE down
 " > /etc/network/interfaces.d/bat$bat
 
-/etc/apache2/sites-available/bat"$bat".conf
-/etc/apache2/ports.conf
-/etc/dhcp/dhcpd.conf
-/etc/radvd.conf
-/etc/systemd/system/fastdbat"$bat".service
-/etc/systemd/system/alfredbat"$bat".service
-/usr/sbin/alfred-c
+#/etc/apache2/sites-available/bat"$bat".conf
+
+echo "<VirtualHost *:$httpport>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/bat$bat
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>" > /etc/apache2/sites-available/bat"$bat".conf
+
+#/etc/apache2/ports.conf
+
+sed -i '4i Listen $httpport' /etc/apache2/ports.conf
+
+#Apache config laden:
+
+a2enside /etc/apache2/sites-available/bat"$bat".conf
+/etc/init.d/apache2 restart
+
+#/etc/systemd/system/fastdbat"$bat".service
+
+echo "[Unit]
+Description=fastd
+
+[Service]
+ExecStart=/usr/bin/fastd -c /etc/fastd/fff.bat$bat/fff.bat$bat.conf
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/fastdbat"$bat".service
+
+#fastd service laden und starten
+
+systemctl enable fastdbat"$bat"
+systemctl start fastdbat"$bat"
+
+#/etc/dhcp/dhcpd.conf
+
+echo "## bat$bat $Hoodname
+subnet $ipv4withoutnet netmask $ipv4netmask {                  
+        range $dhcpstart $dhcpende;                     
+        option routers $ipv4;                         
+        option domain-name-servers 10.83.252.11, 10.50.252.0; 
+        interface bat$bat;
+}" >> /etc/dhcp/dhcpd.conf
+
+#/etc/radvd.conf
+
+echo "interface bat$bat {
+        AdvSendAdvert on;
+        MinRtrAdvInterval 60;
+        MaxRtrAdvInterval 300;
+        AdvDefaultLifetime 600;
+        AdvRASrcAddress {
+                fe80::f05e:80ff:fe32:ed8c; #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        };
+        prefix $ipv6net {
+                AdvOnLink on;
+                AdvAutonomous on;
+        };
+        route fc00::/7 {
+        };
+};" >> /etc/radvd.conf
+
+#/etc/systemd/system/alfredbat"$bat".service
+
+echo "[Unit]
+Description=alfred
+Wants=fastdbat$bat.service
+
+[Service]
+ExecStart=/usr/sbin/alfred -m -i bat$bat -u /var/run/alfredbat$bat.sock
+Type=simple
+ExecStartPre=/bin/sleep 20
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=fastdbat$bat.service" >> /etc/systemd/system/alfredbat"$bat".service
+
+#Alfred config laden und starten
+
+systemctl enable alfredbat"$bat"
+systemctl start alfredbat"$bat"
+
+#/usr/sbin/alfred-c
+
+echo "for fetch_id in $fetch_ids
+do
+    tmp=$(/bin/mktemp)
+    echo "{\"$fetch_id\": " > $tmp
+    /usr/local/bin/alfred-json -r "$fetch_id" -s /var/run/alfredbat$bat.sock >> $tmp
+    echo "}" >> $tmp
+    if [ "$zip" = "1" ]; then
+        gzip $tmp
+        tmp="$tmp.gz"
+        HEADER='-H "Content-Encoding: gzip" --compressed'
+    fi
+    /usr/bin/curl -k -v -H "Content-type: application/json; charset=UTF-8" $HEADER -X POST --data-binary @$tmp $api_url
+    /bin/rm "$tmp"
+done
+
+" >> /usr/sbin/alfred-c
+
+
+
+
