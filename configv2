@@ -41,75 +41,80 @@ echo "Wir nutzen $httpport Port für http Server"
 # /etc/fastd/fff.bat"$bat"
 
 mkdir /etc/fastd/fff.bat"$bat"
-echo "#!/bin/sh
-/sbin/ifdown $INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
+echo "#!/bin/bash
+/sbin/ifdown \$INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
+# x setzen
+chmod a+x /etc/fastd/fff.bat"$bat"/down.sh
 
-echo "#!/bin/sh
-/sbin/ifup $INTERFACE
+echo "#!/bin/bash
+/sbin/ifup \$INTERFACE
 batctl -m bat$bat gw_mode server 256000
 ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
+# x setzen
+chmod a+x /etc/fastd/fff.bat"$bat"/up.sh
 
-echo "#!/bin/sh
+echo "#!/bin/bash
 return 0" > /etc/fastd/fff.bat"$bat"/verify.sh
+# x setzen
+chmod a+x /etc/fastd/fff.bat"$bat"/verify.sh
 
 echo "# Log warnings and errors to stderr
 log level error;
 # Log everything to a log file
-log to syslog as "fffbat$bat" level info;
+log to syslog as \"fffbat$bat\" level info;
 # Set the interface name
-interface "$fastdinterfacename";
+interface \"$fastdinterfacename\";
 # Support xsalsa20 and aes128 encryption methods, prefer xsalsa20
-#method "xsalsa20-poly1305";
-#method "aes128-gcm";
-method "null";
+#method \"xsalsa20-poly1305\";
+#method \"aes128-gcm\";
+method \"null\";
 # Bind to a fixed port, IPv4 only
 bind any:$fastdport;
 # fastd need a key but we don't use them
-secret "90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144";
+secret \"90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144\";
 # Set the interface MTU for TAP mode with xsalsa20/aes128 over IPv4 with a base MTU of 1492 (PPPoE)
 # (see MTU selection documentation)
 mtu 1426;
-on up "/etc/fastd/fff.bat$bat/up.sh";
-on post-down "/etc/fastd/fff.bat$bat/down.sh";
+on up \"/etc/fastd/fff.bat$bat/up.sh\";
+on post-down \"/etc/fastd/fff.bat$bat/down.sh\";
 secure handshakes no;
-on verify "true";
+on verify \"true\";
 " > /etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf
 
 #/etc/network/interfaces.d/bat"$bat"
 
-$IFACE=$fastdinterfacename
 echo "#device: bat$bat
 iface bat$bat inet manual
-post-up ifconfig $IFACE up
+post-up ifconfig \$IFACE up
     ##Einschalten post-up:
     # IP des Gateways am B.A.T.M.A.N interface:
-    post-up ip addr add $ipv4 dev $IFACE
-    post-up ip -6 addr add fe80::1/64 dev $IFACE nodad
-    post-up ip -6 addr add $ipv6 dev $IFACE
-    post-up ip -6 addr add fe80::f05e:80ff:fe32:ed8a dev $IFACE #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    post-up ip addr add $ipv4 dev \$IFACE
+    post-up ip -6 addr add fe80::1/64 dev \$IFACE nodad
+    post-up ip -6 addr add $ipv6 dev \$IFACE
+    post-up ip -6 addr add fe80::f05e:80ff:fe32:ed8a dev \$IFACE #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Regeln, wann die fff Routing-Tabelle benutzt werden soll: 
-    post-up ip rule add iif $IFACE table fff
-    post-up ip -6 rule add iif $IFACE table fff
+    post-up ip rule add iif \$IFACE table fff
+    post-up ip -6 rule add iif \$IFACE table fff
     # Route in die XXXXXXXX Hood:       
-    post-up ip route replace $ipv4net dev $IFACE proto static table fff
-    post-up ip -6 route replace $ipv6net dev $IFACE proto static table fff 
+    post-up ip route replace $ipv4net dev \$IFACE proto static table fff
+    post-up ip -6 route replace $ipv6net dev \$IFACE proto static table fff 
     # Start des DHCP Servers:
     post-up invoke-rc.d isc-dhcp-server restart
 
     ##Ausschalten post-down:
     # Loeschen von oben definieren Routen, Regeln und Interface: 
-    post-down ip route del $ipv4net dev $IFACE table fff
-    post-down ip -6 route del $ipv6net dev $IFACE proto static table fff 
-    post-down ip rule del iif $IFACE table fff
-    post-down ifconfig $IFACE down
+    post-down ip route del $ipv4net dev \$IFACE table fff
+    post-down ip -6 route del $ipv6net dev \$IFACE proto static table fff 
+    post-down ip rule del iif \$IFACE table fff
+    post-down ifconfig \$IFACE down
 
 # VPN Verbindung in die $Hoodname Hood
 iface $fastdinterfacename inet manual
-    post-up batctl -m bat$bat if add $IFACE
-    post-up ifconfig $IFACE up
+    post-up batctl -m bat$bat if add \$IFACE
+    post-up ifconfig \$IFACE up
     post-up ifup bat$bat
     post-down ifdown bat$bat
-    post-down ifconfig $IFACE down
+    post-down ifconfig \$IFACE down
 " > /etc/network/interfaces.d/bat$bat
 
 #/etc/apache2/sites-available/bat"$bat".conf
@@ -117,8 +122,8 @@ iface $fastdinterfacename inet manual
 echo "<VirtualHost *:$httpport>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/bat$bat
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>" > /etc/apache2/sites-available/bat"$bat".conf
 
 #/etc/apache2/ports.conf
@@ -198,19 +203,19 @@ systemctl start alfredbat"$bat"
 
 #/usr/sbin/alfred-c
 
-echo "for fetch_id in $fetch_ids
+echo "for fetch_id in \$fetch_ids
 do
-    tmp=$(/bin/mktemp)
-    echo "{\"$fetch_id\": " > $tmp
-    /usr/local/bin/alfred-json -r "$fetch_id" -s /var/run/alfredbat$bat.sock >> $tmp
-    echo "}" >> $tmp
-    if [ "$zip" = "1" ]; then
-        gzip $tmp
-        tmp="$tmp.gz"
-        HEADER='-H "Content-Encoding: gzip" --compressed'
+    tmp=\$(/bin/mktemp)
+    echo \"{\\\"\$fetch_id\\\": \" > \$tmp
+    /usr/local/bin/alfred-json -r \"\$fetch_id\" -s /var/run/alfredbat$bat.sock >> \$tmp
+    echo \"}\" >> \$tmp
+    if [ \"\$zip\" = \"1\" ]; then
+        gzip \$tmp
+        tmp=\"\$tmp.gz\"
+        HEADER='-H \"Content-Encoding: gzip\" --compressed'
     fi
-    /usr/bin/curl -k -v -H "Content-type: application/json; charset=UTF-8" $HEADER -X POST --data-binary @$tmp $api_url
-    /bin/rm "$tmp"
+    /usr/bin/curl -k -v -H \"Content-type: application/json; charset=UTF-8\" \$HEADER -X POST --data-binary @\$tmp \$api_url
+    /bin/rm \"\$tmp\"
 done
 
 " >> /usr/sbin/alfred-c
