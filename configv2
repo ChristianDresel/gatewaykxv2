@@ -42,12 +42,12 @@ echo "Wir nutzen $httpport Port für http Server"
 
 mkdir /etc/fastd/fff.bat"$bat"
 echo "#!/bin/bash
-/sbin/ifdown $INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
+/sbin/ifdown \$INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
 # x setzen
 chmod a+x /etc/fastd/fff.bat"$bat"/down.sh
 
 echo "#!/bin/bash
-/sbin/ifup $INTERFACE
+/sbin/ifup \$INTERFACE
 batctl -m bat$bat gw_mode server 256000
 ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
 # x setzen
@@ -83,7 +83,6 @@ on verify \"true\";
 
 #/etc/network/interfaces.d/bat"$bat"
 
-\$IFACE=$fastdinterfacename
 echo "#device: bat$bat
 iface bat$bat inet manual
 post-up ifconfig \$IFACE up
