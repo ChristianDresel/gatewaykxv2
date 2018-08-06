@@ -204,19 +204,19 @@ systemctl start alfredbat"$bat"
 
 #/usr/sbin/alfred-c
 
-echo "for fetch_id in $fetch_ids
+echo "for fetch_id in \$fetch_ids
 do
-    tmp=$(/bin/mktemp)
-    echo \"{\\\"$fetch_id\\\": \" > $tmp
-    /usr/local/bin/alfred-json -r \"$fetch_id\" -s /var/run/alfredbat$bat.sock >> $tmp
-    echo \"}\" >> $tmp
-    if [ \"$zip\" = \"1\" ]; then
-        gzip $tmp
-        tmp=\"$tmp.gz\"
+    tmp=\$(/bin/mktemp)
+    echo \"{\\\"\$fetch_id\\\": \" > \$tmp
+    /usr/local/bin/alfred-json -r \"\$fetch_id\" -s /var/run/alfredbat$bat.sock >> \$tmp
+    echo \"}\" >> \$tmp
+    if [ \"\$zip\" = \"1\" ]; then
+        gzip \$tmp
+        tmp=\"\$tmp.gz\"
         HEADER='-H \"Content-Encoding: gzip\" --compressed'
     fi
-    /usr/bin/curl -k -v -H \"Content-type: application/json; charset=UTF-8\" $HEADER -X POST --data-binary @$tmp $api_url
-    /bin/rm \"$tmp\"
+    /usr/bin/curl -k -v -H \"Content-type: application/json; charset=UTF-8\" \$HEADER -X POST --data-binary @\$tmp \$api_url
+    /bin/rm \"\$tmp\"
 done
 
 " >> /usr/sbin/alfred-c
