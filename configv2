@@ -6,6 +6,8 @@ ipv4range=
 dhcpstart=
 dhcpende=
 httpport=
+fastdport=
+fastdinterfacename=
 
 
 /etc/fastd/fff.bat"$batnr"
@@ -14,3 +16,5 @@ httpport=
 /etc/apache2/ports.conf
 /etc/dhcp/dhcpd.conf
 /etc/radvd.conf
+/etc/systemd/system/fastdbat"$batnr".service
+/etc/systemd/system/alfredbat"$batnr".service
