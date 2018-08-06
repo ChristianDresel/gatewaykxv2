@@ -41,16 +41,22 @@ echo "Wir nutzen $httpport Port für http Server"
 # /etc/fastd/fff.bat"$bat"
 
 mkdir /etc/fastd/fff.bat"$bat"
-echo "#!/bin/sh
+echo "#!/bin/bash
 /sbin/ifdown $INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
+# x setzen
+chmod a+x /etc/fastd/fff.bat"$bat"/down.sh
 
-echo "#!/bin/sh
+echo "#!/bin/bash
 /sbin/ifup $INTERFACE
 batctl -m bat$bat gw_mode server 256000
 ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
+# x setzen
+chmod a=x /etc/fastd/fff.bat"$bat"/up.sh
 
-echo "#!/bin/sh
+echo "#!/bin/bash
 return 0" > /etc/fastd/fff.bat"$bat"/verify.sh
+# x setzen
+chmod a+x /etc/fastd/fff.bat"$bat"/verify.sh
 
 echo "# Log warnings and errors to stderr
 log level error;
