@@ -61,24 +61,24 @@ chmod a+x /etc/fastd/fff.bat"$bat"/verify.sh
 echo "# Log warnings and errors to stderr
 log level error;
 # Log everything to a log file
-log to syslog as "fffbat$bat" level info;
+log to syslog as \"fffbat$bat\" level info;
 # Set the interface name
-interface "$fastdinterfacename";
+interface \"$fastdinterfacename\";
 # Support xsalsa20 and aes128 encryption methods, prefer xsalsa20
-#method "xsalsa20-poly1305";
-#method "aes128-gcm";
-method "null";
+#method \"xsalsa20-poly1305\";
+#method \"aes128-gcm\";
+method \"null\";
 # Bind to a fixed port, IPv4 only
 bind any:$fastdport;
 # fastd need a key but we don't use them
-secret "90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144";
+secret \"90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144\";
 # Set the interface MTU for TAP mode with xsalsa20/aes128 over IPv4 with a base MTU of 1492 (PPPoE)
 # (see MTU selection documentation)
 mtu 1426;
-on up "/etc/fastd/fff.bat$bat/up.sh";
-on post-down "/etc/fastd/fff.bat$bat/down.sh";
+on up \"/etc/fastd/fff.bat$bat/up.sh\";
+on post-down \"/etc/fastd/fff.bat$bat/down.sh\";
 secure handshakes no;
-on verify "true";
+on verify \"true\";
 " > /etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf
 
 #/etc/network/interfaces.d/bat"$bat"
@@ -207,16 +207,16 @@ systemctl start alfredbat"$bat"
 echo "for fetch_id in $fetch_ids
 do
     tmp=$(/bin/mktemp)
-    echo "{\"$fetch_id\": " > $tmp
-    /usr/local/bin/alfred-json -r "$fetch_id" -s /var/run/alfredbat$bat.sock >> $tmp
-    echo "}" >> $tmp
-    if [ "$zip" = "1" ]; then
+    echo \"{\\\"$fetch_id\\\": \" > $tmp
+    /usr/local/bin/alfred-json -r \"$fetch_id\" -s /var/run/alfredbat$bat.sock >> $tmp
+    echo \"}\" >> $tmp
+    if [ \"$zip\" = \"1\" ]; then
         gzip $tmp
-        tmp="$tmp.gz"
-        HEADER='-H "Content-Encoding: gzip" --compressed'
+        tmp=\"$tmp.gz\"
+        HEADER='-H \"Content-Encoding: gzip\" --compressed'
     fi
-    /usr/bin/curl -k -v -H "Content-type: application/json; charset=UTF-8" $HEADER -X POST --data-binary @$tmp $api_url
-    /bin/rm "$tmp"
+    /usr/bin/curl -k -v -H \"Content-type: application/json; charset=UTF-8\" $HEADER -X POST --data-binary @$tmp $api_url
+    /bin/rm \"$tmp\"
 done
 
 " >> /usr/sbin/alfred-c
