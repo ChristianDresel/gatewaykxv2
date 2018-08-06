@@ -83,39 +83,39 @@ on verify \"true\";
 
 #/etc/network/interfaces.d/bat"$bat"
 
-$IFACE=$fastdinterfacename
+\$IFACE=$fastdinterfacename
 echo "#device: bat$bat
 iface bat$bat inet manual
-post-up ifconfig $IFACE up
+post-up ifconfig \$IFACE up
     ##Einschalten post-up:
     # IP des Gateways am B.A.T.M.A.N interface:
-    post-up ip addr add $ipv4 dev $IFACE
-    post-up ip -6 addr add fe80::1/64 dev $IFACE nodad
-    post-up ip -6 addr add $ipv6 dev $IFACE
-    post-up ip -6 addr add fe80::f05e:80ff:fe32:ed8a dev $IFACE #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    post-up ip addr add $ipv4 dev \$IFACE
+    post-up ip -6 addr add fe80::1/64 dev \$IFACE nodad
+    post-up ip -6 addr add $ipv6 dev \$IFACE
+    post-up ip -6 addr add fe80::f05e:80ff:fe32:ed8a dev \$IFACE #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Regeln, wann die fff Routing-Tabelle benutzt werden soll: 
-    post-up ip rule add iif $IFACE table fff
-    post-up ip -6 rule add iif $IFACE table fff
+    post-up ip rule add iif \$IFACE table fff
+    post-up ip -6 rule add iif \$IFACE table fff
     # Route in die XXXXXXXX Hood:       
-    post-up ip route replace $ipv4net dev $IFACE proto static table fff
-    post-up ip -6 route replace $ipv6net dev $IFACE proto static table fff 
+    post-up ip route replace $ipv4net dev \$IFACE proto static table fff
+    post-up ip -6 route replace $ipv6net dev \$IFACE proto static table fff 
     # Start des DHCP Servers:
     post-up invoke-rc.d isc-dhcp-server restart
 
     ##Ausschalten post-down:
     # Loeschen von oben definieren Routen, Regeln und Interface: 
-    post-down ip route del $ipv4net dev $IFACE table fff
-    post-down ip -6 route del $ipv6net dev $IFACE proto static table fff 
-    post-down ip rule del iif $IFACE table fff
-    post-down ifconfig $IFACE down
+    post-down ip route del $ipv4net dev \$IFACE table fff
+    post-down ip -6 route del $ipv6net dev \$IFACE proto static table fff 
+    post-down ip rule del iif \$IFACE table fff
+    post-down ifconfig \$IFACE down
 
 # VPN Verbindung in die $Hoodname Hood
 iface $fastdinterfacename inet manual
-    post-up batctl -m bat$bat if add $IFACE
-    post-up ifconfig $IFACE up
+    post-up batctl -m bat$bat if add \$IFACE
+    post-up ifconfig \$IFACE up
     post-up ifup bat$bat
     post-down ifdown bat$bat
-    post-down ifconfig $IFACE down
+    post-down ifconfig \$IFACE down
 " > /etc/network/interfaces.d/bat$bat
 
 #/etc/apache2/sites-available/bat"$bat".conf
@@ -123,8 +123,8 @@ iface $fastdinterfacename inet manual
 echo "<VirtualHost *:$httpport>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/bat$bat
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        ErrorLog \${APACHE_LOG_DIR}/error.log
+        CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>" > /etc/apache2/sites-available/bat"$bat".conf
 
 #/etc/apache2/ports.conf
