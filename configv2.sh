@@ -14,10 +14,14 @@ dhcpende="1.2.4.0" # Endandresse von DHCP
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
 lat="49.123" # lat der Hood
 lon="11.123" # lon der Hood
+ethernetinterface="ens3"
+
+# folgende Daten müssen nur 1x angeben werden und werden bei jedem Scriptdurchlauf ab dieser Nummer erhöht. Muss nicht händisch erhöht werden!
+
 fastdportbase=10000
 batbase=0
 httpportbase=2342
-ethernetinterface="ens3"
+
 
 # Ab hier nichts mehr ändern! #
 
