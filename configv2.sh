@@ -182,16 +182,29 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 " > /etc/cron.d/bat"$bat" #KOMPLETT UNGETESTET! Keine Ahnung ob das so überhaupt geht? Muss man crond danach neu starten oder so?
 echo "Cronjob in /etc/cron.d/bat"$bat" angelegt"
 
-#/etc/dhcp/dhcpd.conf
+#/etc/systemd/system/dnsmasqbat"$bat".service
 
-echo "## bat$bat $Hoodname
-subnet $ipv4withoutnet netmask $ipv4netmask {                  
-        range $dhcpstart $dhcpende;                     
-        option routers $ipv4;                         
-        option domain-name-servers 10.83.252.11, 10.50.252.0; 
-        interface bat$bat;
-}" >> /etc/dhcp/dhcpd.conf
-echo "/etc/dhcp/dhcpd.conf erweitert"
+echo "[Unit]
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+
+ExecStart=/usr/sbin/dnsmasq -k --conf-dir=/etc/dnsmasq.d,*.conf --interface bat$bat --dhcp-range=$dhcpstart,$dhcpende,$ipv4netmask,20m --pid-file=/var/run/dhcp-bat$bat.pid --dhcp-leasefile=/var/lib/misc/bat$bat.leases
+
+[Install]
+WantedBy=multi-user.target
+";
+echo "/etc/systemd/system/dnsmasqbat"$bat".service angelegt"
+
+#start dnsmasq
+
+systemctl start dnsmasqbat"$bat".service
+systemctl enable dnsmasqbat"$bat".service
+echo "dnsamsq enabled und gestartet"
 
 #/etc/radvd.conf
 
