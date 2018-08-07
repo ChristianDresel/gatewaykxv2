@@ -17,8 +17,12 @@ lon="11.123" # lon der Hood
 fastdport=10000
 batbase=0
 httpportbase=2342
+ethernetinterface="ens3"
 
 # Ab hier nichts mehr ändern! #
+
+#fe80 IPv6 holen:
+fe80=$(ifconfig $ethernetinterface | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f10)
 
 
 fastdportbase=$fastdport
@@ -93,7 +97,7 @@ post-up ifconfig \$IFACE up
     post-up ip addr add $ipv4 dev \$IFACE
     post-up ip -6 addr add fe80::1/64 dev \$IFACE nodad
     post-up ip -6 addr add $ipv6 dev \$IFACE
-    post-up ip -6 addr add fe80::f05e:80ff:fe32:ed8a dev \$IFACE #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    post-up ip -6 addr add $fe80 dev \$IFACE 
     # Regeln, wann die fff Routing-Tabelle benutzt werden soll: 
     post-up ip rule add iif \$IFACE table fff
     post-up ip -6 rule add iif \$IFACE table fff
@@ -181,7 +185,7 @@ echo "interface bat$bat {
         MaxRtrAdvInterval 300;
         AdvDefaultLifetime 600;
         AdvRASrcAddress {
-                fe80::f05e:80ff:fe32:ed8c; #MUST EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                $fe80; 
         };
         prefix $ipv6net {
                 AdvOnLink on;
