@@ -255,11 +255,57 @@ echo "Alfred Service gestartet und enabled"
 # MRTG Config neu machen
 
 #/etc/mrtg/dhcp.cfg
-#muss bearbeitet werden TODO!!!
 
+echo "#!/bin/bash
+leasecount=$(cat /var/lib/misc/bat0.leases | wc -l)
+echo \"$leasecount\"
+echo \"$leasecount\"
+echo 0
+echo 0" > /etc/mrtg/dhcpbat"$bat".sh
+chmod +x /etc/mrtg/dhcpbat"$bat".sh
+echo "/etc/mrtg/dhcpbat"$bat".sh angelegt und ausführbar gemacht"
+
+echo "#!/bin/bash
+gwlcount=$(/usr/sbin/batctl -m bat$bat gwl -H | wc -l)
+echo \"$gwlcount\"
+echo \"$gwlcount\"
+echo 0
+echo 0" > /etc/mrtg/gwlbat"$bat".sh
+chmod +x /etc/mrtg/gwlbat"$bat".sh
+echo "/etc/mrtg/gwlbat"$bat".sh angelegt und ausführbar gemacht"
+
+echo "
+WorkDir: /var/www/mrtg
+Title[dhcpleasecount$bat]: DHCP-Leases
+PageTop[dhcpleasecount$bat]: <H1>DHCP-Leases bat$bat $Hoodname</H1>
+Options[dhcpleasecount$bat]: gauge,nopercent,growright,noinfo
+Target[dhcpleasecount$bat]: `/etc/mrtg/dhcpbat$bat.sh`
+MaxBytes[dhcpleasecount$bat]: 255
+YLegend[dhcpleasecount$bat]: DHCP Count
+ShortLegend[dhcpleasecount$bat]: x
+Unscaled[dhcpleasecount$bat]: ymwd
+LegendI[dhcpleasecount$bat]: Count
+LegendO[dhcpleasecount$bat]:
+
+WorkDir: /var/www/mrtg
+Title[gwlleasecount$bat]: Gatewayanzahl
+PageTop[gwlleasecount$bat]: <H1>Gatewayanzahl bat$bat $Hoodname</H1>
+Options[gwlleasecount$bat]: gauge,nopercent,growright,noinfo
+Target[gwlleasecount$bat]: `/etc/mrtg/gwlbat$bat.sh`
+MaxBytes[gwlleasecount$bat]: 3
+YLegend[gwlleasecount$bat]: Gateway Count
+ShortLegend[gwlleasecount$bat]: x
+Unscaled[gwlleasecount$bat]: ymwd
+LegendI[gwlleasecount$bat]: Count
+LegendO[gwlleasecount$bat]:" >> /etc/mrtg/dhcp.cfg
+echo "/etc/mrtg/dhcp.cfg erweitert"
+
+echo "Mache mrtg config neu"
 /usr/bin/cfgmaker --output=/etc/mrtg/traffic.cfg  -zero-speed=100000000 --global "WorkDir: /var/www/mrtg" --ifdesc=name,ip,desc,type --ifref=name,desc --global "Options[_]: bits,growright" public@localhost
 sed -i -e 's/^\(MaxBytes.*\)$/\10/g' /etc/mrtg/traffic.cfg
 /usr/bin/indexmaker --output=/var/www/mrtg/index.html --title="$(hostname)" --sort=name --enumerat /etc/mrtg/traffic.cfg /etc/mrtg/cpu.cfg /etc/mrtg/dhcp.cfg
 cat /var/www/mrtg/index.html | sed -e 's/SRC="/SRC="mrtg\//g' -e 's/HREF="/HREF="mrtg\//g' -e 's/<\/H1>/<\/H1><img src="topology.png">/g' > /var/www/index.html 
+echo "Mrtg config neu gemacht"
+echo "Script fertig"
 
 
