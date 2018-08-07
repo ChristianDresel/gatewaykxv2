@@ -12,6 +12,8 @@ ipv4netmask="255.255.248.0"
 dhcpstart="1.2.3.0" # Startadresse von DHCP
 dhcpende="1.2.4.0" # Endandresse von DHCP
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
+lat="49.123" # lat der Hood
+lon="11.123" # lon der Hood
 fastdport=10000
 batbase=0
 httpportbase=2342
@@ -134,6 +136,14 @@ sed -i '4i Listen $httpport' /etc/apache2/ports.conf
 
 a2enside /etc/apache2/sites-available/bat"$bat".conf
 /etc/init.d/apache2 restart
+
+#Cronjob für Hoodfile anlegen:
+
+echo "SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+*/5 * * * * wget "http://keyserver.freifunk-franken.de/v2/index.php?lat=$lat&long=$lon" -O /var/www/bat$bat/keyxchangev2data
+" > /etc/cron.d/bat"$bat".conf #KOMPLETT UNGETESTET! Keine Ahnung ob das so überhaupt geht? Muss man crond danach neu starten oder so?
 
 #/etc/systemd/system/fastdbat"$bat".service
 
