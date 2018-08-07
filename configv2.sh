@@ -22,7 +22,7 @@ ethernetinterface="ens3"
 # Ab hier nichts mehr ändern! #
 
 #fe80 IPv6 holen:
-fe80=$(ifconfig $ethernetinterface | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f10)
+fe80=$(ip -6 addr show ens3 | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f6)
 
 
 fastdportbase=$fastdport
