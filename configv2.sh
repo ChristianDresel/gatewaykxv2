@@ -208,6 +208,11 @@ echo "interface bat$bat {
 };" >> /etc/radvd.conf
 echo "/etc/radvd.conf erweitert"
 
+#restart radvd
+
+/etc/init.d/radvd restart
+echo "radvd neu gestartet"
+
 #/etc/systemd/system/alfredbat"$bat".service
 
 echo "[Unit]
