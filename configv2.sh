@@ -14,7 +14,7 @@ dhcpende="1.2.4.0" # Endandresse von DHCP
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
 lat="49.123" # lat der Hood
 lon="11.123" # lon der Hood
-fastdport=10000
+fastdportbase=10000
 batbase=0
 httpportbase=2342
 ethernetinterface="ens3"
@@ -25,7 +25,7 @@ ethernetinterface="ens3"
 fe80=$(ip -6 addr show $ethernetinterface | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f6)
 echo "Wir nutzen folgende fe80 IPv6: $fe80"
 
-fastdportbase=$fastdport
+fastdport=$fastdportbase
 while grep $fastdport /etc/fastd/fff.bat*/fff.bat*.conf* &>/dev/null ; do ((fastdport+=1)); done
 echo "Wir nutzen $fastdport Port für fastd"
 ## $fastdport = port für fastdport
