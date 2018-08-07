@@ -23,7 +23,7 @@ ethernetinterface="ens3"
 
 #fe80 IPv6 holen:
 fe80=$(ip -6 addr show $ethernetinterface | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f6)
-
+echo "Wir nutzen folgende fe80 IPv6: $fe80"
 
 fastdportbase=$fastdport
 while grep $fastdport /etc/fastd/fff.bat*/fff.bat*.conf* &>/dev/null ; do ((fastdport+=1)); done
@@ -51,6 +51,7 @@ echo "#!/bin/bash
 /sbin/ifdown \$INTERFACE" > /etc/fastd/fff.bat"$bat"/down.sh
 # x setzen
 chmod a+x /etc/fastd/fff.bat"$bat"/down.sh
+echo "/etc/fastd/fff.bat"$bat" angelegt"
 
 echo "#!/bin/bash
 /sbin/ifup \$INTERFACE
@@ -58,11 +59,13 @@ batctl -m bat$bat gw_mode server 256000
 ip6tables -t nat -A PREROUTING -i bat$bat -p tcp -d fe80::1 --dport 2342 -j REDIRECT --to-port $httpport" > /etc/fastd/fff.bat"$bat"/up.sh
 # x setzen
 chmod a+x /etc/fastd/fff.bat"$bat"/up.sh
+echo "/etc/fastd/fff.bat"$bat"/up.sh angelegt"
 
 echo "#!/bin/bash
 return 0" > /etc/fastd/fff.bat"$bat"/verify.sh
 # x setzen
 chmod a+x /etc/fastd/fff.bat"$bat"/verify.sh
+echo "/etc/fastd/fff.bat"$bat"/verify.sh angelegt"
 
 echo "# Log warnings and errors to stderr
 log level error;
@@ -86,6 +89,7 @@ on post-down \"/etc/fastd/fff.bat$bat/down.sh\";
 secure handshakes no;
 on verify \"true\";
 " > /etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf
+echo "/etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf angelegt"
 
 #/etc/network/interfaces.d/bat"$bat"
 
@@ -122,6 +126,7 @@ iface $fastdinterfacename inet manual
     post-down ifdown bat$bat
     post-down ifconfig \$IFACE down
 " > /etc/network/interfaces.d/bat$bat
+echo "/etc/network/interfaces.d/bat"$bat" angelegt" 
 
 #/etc/apache2/sites-available/bat"$bat".conf
 
@@ -131,15 +136,18 @@ echo "<VirtualHost *:$httpport>
         ErrorLog \${APACHE_LOG_DIR}/error.log
         CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>" > /etc/apache2/sites-available/bat"$bat".conf
+echo "/etc/apache2/sites-available/bat"$bat".conf angelegt"
 
 #/etc/apache2/ports.conf
 
 sed -i '4i Listen $httpport' /etc/apache2/ports.conf
+echo "Port in /etc/apache2/ports.conf erweitert"
 
 #Apache config laden:
 
 a2enside /etc/apache2/sites-available/bat"$bat".conf
 /etc/init.d/apache2 restart
+echo "Config für Apache neu geladen und Apache neu gestartet"
 
 #Cronjob für Hoodfile anlegen:
 
@@ -148,6 +156,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 */5 * * * * wget "http://keyserver.freifunk-franken.de/v2/index.php?lat=$lat&long=$lon" -O /var/www/bat$bat/keyxchangev2data
 " > /etc/cron.d/bat"$bat" #KOMPLETT UNGETESTET! Keine Ahnung ob das so überhaupt geht? Muss man crond danach neu starten oder so?
+echo "Cronjob in /etc/cron.d/bat"$bat" angelegt"
 
 #/etc/systemd/system/fastdbat"$bat".service
 
@@ -161,11 +170,13 @@ Type=simple
 [Install]
 WantedBy=multi-user.target
 " > /etc/systemd/system/fastdbat"$bat".service
+echo "/etc/systemd/system/fastdbat"$bat".service angelegt"
 
 #fastd service laden und starten
 
 systemctl enable fastdbat"$bat"
 systemctl start fastdbat"$bat"
+echo "fastd Service gestartet und enabled"
 
 #/etc/dhcp/dhcpd.conf
 
@@ -176,6 +187,7 @@ subnet $ipv4withoutnet netmask $ipv4netmask {
         option domain-name-servers 10.83.252.11, 10.50.252.0; 
         interface bat$bat;
 }" >> /etc/dhcp/dhcpd.conf
+echo "/etc/dhcp/dhcpd.conf erweitert"
 
 #/etc/radvd.conf
 
@@ -194,6 +206,7 @@ echo "interface bat$bat {
         route fc00::/7 {
         };
 };" >> /etc/radvd.conf
+echo "/etc/radvd.conf erweitert"
 
 #/etc/systemd/system/alfredbat"$bat".service
 
@@ -209,11 +222,13 @@ ExecStartPre=/bin/sleep 20
 [Install]
 WantedBy=multi-user.target
 WantedBy=fastdbat$bat.service" >> /etc/systemd/system/alfredbat"$bat".service
+echo "/etc/systemd/system/alfredbat"$bat".service angelegt"
 
 #Alfred config laden und starten
 
 systemctl enable alfredbat"$bat"
 systemctl start alfredbat"$bat"
+echo "Alfred Service gestartet und enabled"
 
 # MRTG Config neu machen
 
