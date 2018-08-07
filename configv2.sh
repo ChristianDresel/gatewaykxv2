@@ -128,6 +128,26 @@ iface $fastdinterfacename inet manual
 " > /etc/network/interfaces.d/bat$bat
 echo "/etc/network/interfaces.d/bat"$bat" angelegt" 
 
+#/etc/systemd/system/fastdbat"$bat".service
+
+echo "[Unit]
+Description=fastd
+
+[Service]
+ExecStart=/usr/bin/fastd -c /etc/fastd/fff.bat$bat/fff.bat$bat.conf
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/fastdbat"$bat".service
+echo "/etc/systemd/system/fastdbat"$bat".service angelegt"
+
+#fastd service laden und starten
+
+systemctl enable fastdbat"$bat"
+systemctl start fastdbat"$bat"
+echo "fastd Service gestartet und enabled"
+
 #/etc/apache2/sites-available/bat"$bat".conf
 
 echo "<VirtualHost *:$httpport>
@@ -157,26 +177,6 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 */5 * * * * wget "http://keyserver.freifunk-franken.de/v2/index.php?lat=$lat&long=$lon" -O /var/www/bat$bat/keyxchangev2data
 " > /etc/cron.d/bat"$bat" #KOMPLETT UNGETESTET! Keine Ahnung ob das so überhaupt geht? Muss man crond danach neu starten oder so?
 echo "Cronjob in /etc/cron.d/bat"$bat" angelegt"
-
-#/etc/systemd/system/fastdbat"$bat".service
-
-echo "[Unit]
-Description=fastd
-
-[Service]
-ExecStart=/usr/bin/fastd -c /etc/fastd/fff.bat$bat/fff.bat$bat.conf
-Type=simple
-
-[Install]
-WantedBy=multi-user.target
-" > /etc/systemd/system/fastdbat"$bat".service
-echo "/etc/systemd/system/fastdbat"$bat".service angelegt"
-
-#fastd service laden und starten
-
-systemctl enable fastdbat"$bat"
-systemctl start fastdbat"$bat"
-echo "fastd Service gestartet und enabled"
 
 #/etc/dhcp/dhcpd.conf
 
