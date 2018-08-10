@@ -11,6 +11,7 @@ ipv4net="1.2.3.0/22" # das v4 Subnetz der Hood
 ipv4netmask="255.255.248.0"
 dhcpstart="1.2.3.0" # Startadresse von DHCP
 dhcpende="1.2.4.0" # Endandresse von DHCP
+mengeaddr=380
 fastdinterfacename="fffBLABLAVPN" # Name des VPN Interfaces
 lat="49.123" # lat der Hood
 lon="11.123" # lon der Hood
@@ -280,7 +281,7 @@ Title[dhcpleasecount$bat]: DHCP-Leases
 PageTop[dhcpleasecount$bat]: <H1>DHCP-Leases bat$bat $Hoodname</H1>
 Options[dhcpleasecount$bat]: gauge,nopercent,growright,noinfo
 Target[dhcpleasecount$bat]: `/etc/mrtg/dhcpbat$bat.sh`
-MaxBytes[dhcpleasecount$bat]: 255
+MaxBytes[dhcpleasecount$bat]: "$mengeaddr"
 YLegend[dhcpleasecount$bat]: DHCP Count
 ShortLegend[dhcpleasecount$bat]: x
 Unscaled[dhcpleasecount$bat]: ymwd
