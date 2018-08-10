@@ -281,7 +281,7 @@ Title[dhcpleasecount$bat]: DHCP-Leases
 PageTop[dhcpleasecount$bat]: <H1>DHCP-Leases bat$bat $Hoodname</H1>
 Options[dhcpleasecount$bat]: gauge,nopercent,growright,noinfo
 Target[dhcpleasecount$bat]: `/etc/mrtg/dhcpbat$bat.sh`
-MaxBytes[dhcpleasecount$bat]: "$mengeaddr"
+MaxBytes[dhcpleasecount$bat]: $mengeaddr
 YLegend[dhcpleasecount$bat]: DHCP Count
 ShortLegend[dhcpleasecount$bat]: x
 Unscaled[dhcpleasecount$bat]: ymwd
