@@ -113,7 +113,6 @@ post-up ifconfig \$IFACE up
     # Route in die XXXXXXXX Hood:       
     post-up ip route replace $ipv4net dev \$IFACE proto static table fff
     post-up ip -6 route replace $ipv6net dev \$IFACE proto static table fff 
-    # Start des DHCP Servers:
 
     ##Ausschalten post-down:
     # Loeschen von oben definieren Routen, Regeln und Interface: 
