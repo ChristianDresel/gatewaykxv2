@@ -114,7 +114,6 @@ post-up ifconfig \$IFACE up
     post-up ip route replace $ipv4net dev \$IFACE proto static table fff
     post-up ip -6 route replace $ipv6net dev \$IFACE proto static table fff 
     # Start des DHCP Servers:
-    post-up invoke-rc.d isc-dhcp-server restart
 
     ##Ausschalten post-down:
     # Loeschen von oben definieren Routen, Regeln und Interface: 
