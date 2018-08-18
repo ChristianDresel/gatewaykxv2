@@ -163,7 +163,7 @@ echo "/etc/apache2/sites-available/bat"$bat".conf angelegt"
 
 #/etc/apache2/ports.conf
 
-sed -i '4i Listen $httpport' /etc/apache2/ports.conf
+sed -i '4i Listen '$httpport'' /etc/apache2/ports.conf
 echo "Port in /etc/apache2/ports.conf erweitert"
 
 #Apache config laden:
