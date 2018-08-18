@@ -206,6 +206,8 @@ systemctl start dnsmasqbat"$bat".service
 systemctl enable dnsmasqbat"$bat".service
 echo "dnsamsq enabled und gestartet"
 
+echo "<html><header></header><body><img src="https://i.pinimg.com/originals/c8/af/e6/c8afe6457997851b504458a30b6d223d.jpg"></img></body></html>" > /var/www/html/index.html
+
 #/etc/radvd.conf
 
 echo "interface bat$bat {
