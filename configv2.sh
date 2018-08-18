@@ -239,7 +239,7 @@ Description=alfred
 Wants=fastdbat$bat.service
 
 [Service]
-ExecStart=/usr/sbin/alfred -m -i bat$bat -u /var/run/alfredbat$bat.sock
+ExecStart=/usr/sbin/alfred -m -i bat$bat -b none -u /var/run/alfredbat$bat.sock
 Type=simple
 ExecStartPre=/bin/sleep 20
 
