@@ -178,7 +178,7 @@ echo "SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 */5 * * * * wget \"http://keyserver.freifunk-franken.de/v2/index.php?lat=$lat&long=$lon\" -O /var/www/bat$bat/keyxchangev2data
-" > /etc/cron.d/bat"$bat" #KOMPLETT UNGETESTET! Keine Ahnung ob das so überhaupt geht? Muss man crond danach neu starten oder so?
+" > /etc/cron.d/bat"$bat"
 echo "Cronjob in /etc/cron.d/bat"$bat" angelegt"
 
 #/etc/systemd/system/dnsmasqbat"$bat".service
