@@ -17,7 +17,7 @@ lat="49.123" # lat der Hood Beispiel: 49.123
 lon="11.123" # lon der Hood Beispiel: 11.123
 ethernetinterface="ens3" Hauptnetzwekinterface des Servers Beispiel: ens3
 
-# folgende Daten müssen nur 1x angeben werden und werden bei jedem Scriptdurchlauf ab dieser Nummer erhöht. Muss nicht händisch erhöht werden!
+# folgende Daten müssen nur 1x angeben werden und werden bei jedem Scriptdurchlauf ab dieser Nummer erhöht. Darf nicht händisch erhöht werden!
 
 fastdportbase=10000
 batbase=0
