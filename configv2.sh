@@ -161,6 +161,10 @@ echo "<VirtualHost *:$httpport>
 </VirtualHost>" > /etc/apache2/sites-available/bat"$bat".conf
 echo "/etc/apache2/sites-available/bat"$bat".conf angelegt"
 
+#Ordner für Apache Home anlegen
+mkdir /var/www/bat$bat
+echo "/var/www/bat$bat angelegt
+
 #/etc/apache2/ports.conf
 
 sed -i '4i Listen '$httpport'' /etc/apache2/ports.conf
