@@ -173,7 +173,7 @@ echo "Port in /etc/apache2/ports.conf erweitert"
 #Apache config laden:
 
 a2enside /etc/apache2/sites-available/bat"$bat".conf
-/etc/init.d/apache2 restart
+systemctl reload apache2
 echo "Config für Apache neu geladen und Apache neu gestartet"
 
 #Cronjob für Hoodfile anlegen:
