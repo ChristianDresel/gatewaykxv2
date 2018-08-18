@@ -1,30 +1,8 @@
 #!/bin/bash
 
-# Folgende Zeilen anpassen #
-
-Hoodname="BLABLA"
-ipv6="ff43:5602:29bd:18::X/64" # die eigene v6 ULA Adresse mit Netzgröße Beispiel: ff43:5602:29bd:18::5/64
-ipv6net="ff43:5602:29bd:18::/64" # Das ULA Subnetz für die Hood Beispiel: ff43:5602:29bd:18::/64
-ipv4="1.2.3.4/22" # die eigene v4 Adresse mit Netzgröße Beispiel: 1.2.3.4/22
-ipv4withoutnet="1.2.3.4" die eigene v4 Adresse Beispiel: 1.2.3.4
-ipv4net="1.2.3.0/22" # das v4 Subnetz der Hood Beispiel: 1.2.3.0/22
-ipv4netmask="255.255.248.0" Beispiel: 255.255.248.0
-dhcpstart="1.2.3.0" # Startadresse von DHCP Beispiel: 1.2.3.0
-dhcpende="1.2.4.0" # Endandresse von DHCP Beispiel: 1.2.4.0
-mengeaddr=380 Anzahl der vergeben DHCP Adressen (nur für mrtg, großzügig übertreiben) Beispiel: 380
-fastdinterfacename="fffblablaVPN" # Name des VPN Interfaces Beispiel: fffblablaVPN
-lat="49.123" # lat der Hood Beispiel: 49.123
-lon="11.123" # lon der Hood Beispiel: 11.123
-ethernetinterface="ens3" Hauptnetzwekinterface des Servers Beispiel: ens3
-
-# folgende Daten müssen nur 1x angeben werden und werden bei jedem Scriptdurchlauf ab dieser Nummer erhöht. Darf nicht händisch erhöht werden!
-
-fastdportbase=10000
-batbase=0
-httpportbase=2342
-
-
-# Ab hier nichts mehr ändern! #
+conffile="/etc/hoods/$1.conf"
+[ -s "$conffile" ] || echo "Usage: $0 Hoodname " && exit
+. "$conffile"
 
 #fe80 IPv6 holen:
 fe80=$(ip -6 addr show $ethernetinterface | grep "inet6 fe80" | grep -v "inet6 fe80::1" | tail -n 1 | cut -d " " -f6)
