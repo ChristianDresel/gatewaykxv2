@@ -43,7 +43,7 @@ echo "Wir nutzen $bat Nummer für Batman Interface"
 
 
 httpport=$httpportbase
-while grep $httpport /etc/apache2/sites-available* &>/dev/null ; do ((httpport+=1)); done
+while grep $httpport /etc/apache2/sites-available/* &>/dev/null ; do ((httpport+=1)); done
 echo "Wir nutzen $httpport Port für http Server"
 ## $httpport = port für httpserver
 
