@@ -279,7 +279,7 @@ WorkDir: /var/www/mrtg
 Title[dhcpleasecount$bat]: DHCP-Leases
 PageTop[dhcpleasecount$bat]: <H1>DHCP-Leases bat$bat $Hoodname</H1>
 Options[dhcpleasecount$bat]: gauge,nopercent,growright,noinfo
-Target[dhcpleasecount$bat]: `/etc/mrtg/dhcpbat$bat.sh`
+Target[dhcpleasecount$bat]: \`/etc/mrtg/dhcpbat$bat.sh\`
 MaxBytes[dhcpleasecount$bat]: $mengeaddr
 YLegend[dhcpleasecount$bat]: DHCP Count
 ShortLegend[dhcpleasecount$bat]: x
@@ -291,7 +291,7 @@ WorkDir: /var/www/mrtg
 Title[gwlleasecount$bat]: Gatewayanzahl
 PageTop[gwlleasecount$bat]: <H1>Gatewayanzahl bat$bat $Hoodname</H1>
 Options[gwlleasecount$bat]: gauge,nopercent,growright,noinfo
-Target[gwlleasecount$bat]: `/etc/mrtg/gwlbat$bat.sh`
+Target[gwlleasecount$bat]: \`/etc/mrtg/gwlbat$bat.sh\`
 MaxBytes[gwlleasecount$bat]: 3
 YLegend[gwlleasecount$bat]: Gateway Count
 ShortLegend[gwlleasecount$bat]: x
