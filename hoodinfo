@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#parse the Opts
+while getopts ":ihf" opt; do
+  case $opt in
+    i)
+      inter=yes
+      ;;
+    f)
+      full=yes
+      ;;
+    h)
+      echo "Usage: [ifh] $0"
+      echo "-i show Hoods interactive"
+	  echo "-f full print"
+	  exit
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+	  $0 -h
+      exit
+      ;;
+  esac
+done
+
+
+for hood in $(ls /etc/hoods/*.conf); do
+    if [ $full ] ; then
+        grep -v ^# $hood
+        echo 
+        echo ----------------------------------------
+        echo 
+        [ $inter ] && { echo -n "Ener for next Hood : "; read x; }
+    else
+        grep ^Hoodname $hood
+        echo ---
+	fi
+done
