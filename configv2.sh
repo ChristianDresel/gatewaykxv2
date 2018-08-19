@@ -15,7 +15,7 @@ echo "Wir nutzen $fastdport Port für fastd"
 
 
 bat=$batbase
-while grep bat$bat /etc/systemd/system/fastdbat* &>/dev/null ; do ((bat+=1)); done
+while grep bat$bat /etc/systemd/system/fastdbat*.service &>/dev/null ; do ((bat+=1)); done
 echo "Wir nutzen $bat Nummer für Batman Interface"
 ## $bat = bat interface
 
