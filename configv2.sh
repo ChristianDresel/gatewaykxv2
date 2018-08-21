@@ -150,7 +150,7 @@ echo "Port in /etc/apache2/ports.conf erweitert"
 
 #Apache config laden:
 
-a2enside /etc/apache2/sites-available/bat"$bat".conf
+a2ensite /etc/apache2/sites-available/bat"$bat".conf
 systemctl reload apache2
 echo "Config für Apache neu geladen und Apache neu gestartet"
 
