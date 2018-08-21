@@ -175,7 +175,7 @@ ExecStart=/usr/sbin/dnsmasq -k --conf-dir=/etc/dnsmasq.d,*.conf --interface bat$
 
 [Install]
 WantedBy=multi-user.target
-"; > /etc/systemd/system/dnsmasqbat"$bat".service
+" > /etc/systemd/system/dnsmasqbat"$bat".service
 echo "/etc/systemd/system/dnsmasqbat"$bat".service angelegt"
 
 #start dnsmasq
