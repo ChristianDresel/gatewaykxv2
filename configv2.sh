@@ -141,7 +141,7 @@ echo "/etc/apache2/sites-available/bat"$bat".conf angelegt"
 
 #Ordner für Apache Home anlegen
 mkdir /var/www/bat$bat
-echo "/var/www/bat$bat angelegt
+echo "/var/www/bat$bat angelegt"
 
 #/etc/apache2/ports.conf
 
