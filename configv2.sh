@@ -1,7 +1,11 @@
 #!/bin/bash
 
 conffile="/etc/hoods/$1.conf"
-[ -s "$conffile" ] || echo "Usage: $0 Hoodname " && exit
+if [ ! -s "$conffile" ]; then
+    echo "Usage: $0 Hoodname ";
+    exit 1;
+fi
+
 . "$conffile"
 
 #fe80 IPv6 holen:
