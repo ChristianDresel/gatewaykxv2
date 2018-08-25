@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$(/usr/bin/id -u)" -ne 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
+
 conffile="/etc/hoods/$1.conf"
 if [ ! -s "$conffile" ]; then
     echo "Usage: $0 Hoodname ";
