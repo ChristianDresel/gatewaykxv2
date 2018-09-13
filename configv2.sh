@@ -77,7 +77,7 @@ secret \"90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144\";
 # (see MTU selection documentation)
 mtu 1426;
 on up \"/etc/fastd/fff.bat$bat/up.sh\";
-on post-down \"/etc/fastd/fff.bat$bat/down.sh\";
+on down \"/etc/fastd/fff.bat$bat/down.sh\";
 secure handshakes no;
 on verify \"true\";
 " > /etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf
