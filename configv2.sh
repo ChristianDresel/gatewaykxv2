@@ -237,18 +237,18 @@ echo "Alfred Service gestartet und enabled"
 #/etc/mrtg/dhcp.cfg
 
 echo "#!/bin/bash
-leasecount=$(cat /var/lib/misc/bat0.leases | wc -l)
-echo \"$leasecount\"
-echo \"$leasecount\"
+leasecount=\$(cat /var/lib/misc/bat0.leases | wc -l)
+echo \"\$leasecount\"
+echo \"\$leasecount\"
 echo 0
 echo 0" > /etc/mrtg/dhcpbat"$bat".sh
 chmod +x /etc/mrtg/dhcpbat"$bat".sh
 echo "/etc/mrtg/dhcpbat"$bat".sh angelegt und ausführbar gemacht"
 
 echo "#!/bin/bash
-gwlcount=$(/usr/sbin/batctl -m bat$bat gwl -H | wc -l)
-echo \"$gwlcount\"
-echo \"$gwlcount\"
+gwlcount=\$(/usr/sbin/batctl -m bat$bat gwl -H | wc -l)
+echo \"\$gwlcount\"
+echo \"\$gwlcount\"
 echo 0
 echo 0" > /etc/mrtg/gwlbat"$bat".sh
 chmod +x /etc/mrtg/gwlbat"$bat".sh
