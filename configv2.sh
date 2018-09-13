@@ -194,7 +194,7 @@ echo "interface bat$bat {
         MaxRtrAdvInterval 300;
         AdvDefaultLifetime 600;
         AdvRASrcAddress {
-                $fe80; 
+                ${fe80%/*}; 
         };
         prefix $ipv6net {
                 AdvOnLink on;
