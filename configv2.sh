@@ -152,6 +152,9 @@ echo "/var/www/bat$bat angelegt"
 sed -i '4i Listen '$httpport'' /etc/apache2/ports.conf
 echo "Port in /etc/apache2/ports.conf erweitert"
 
+echo "$(hostname)" > "/var/www/bat$bat/gateway"
+echo "/var/www/bat$bat/gateway angelegt"
+
 #Apache config laden:
 
 a2ensite /etc/apache2/sites-available/bat"$bat".conf
