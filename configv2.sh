@@ -78,7 +78,7 @@ echo "/etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf angelegt"
 
 echo "#device: bat$bat
 iface bat$bat inet manual
-post-up ifconfig \$IFACE up
+    post-up ip link set dev \$IFACE up
     ##Einschalten post-up:
     # IP des Gateways am B.A.T.M.A.N interface:
     post-up ip addr add $ipv4 dev \$IFACE
@@ -97,15 +97,15 @@ post-up ifconfig \$IFACE up
     post-down ip route del $ipv4net dev \$IFACE table fff
     post-down ip -6 route del $ipv6net dev \$IFACE proto static table fff 
     post-down ip rule del iif \$IFACE table fff
-    post-down ifconfig \$IFACE down
+    post-down ip link set dev \$IFACE down
 
 # VPN Verbindung in die $Hoodname Hood
 iface $fastdinterfacename inet manual
     post-up batctl -m bat$bat if add \$IFACE
-    post-up ifconfig \$IFACE up
+    post-up ip link set dev \$IFACE up
     post-up ifup bat$bat
     post-down ifdown bat$bat
-    post-down ifconfig \$IFACE down
+    post-down ip link set dev \$IFACE down
 " > /etc/network/interfaces.d/bat$bat
 echo "/etc/network/interfaces.d/bat"$bat" angelegt" 
 
