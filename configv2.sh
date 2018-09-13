@@ -110,8 +110,8 @@ iface $fastdinterfacename inet manual
     post-up ifup bat$bat
     post-down ifdown bat$bat
     post-down ip link set dev \$IFACE down
-" > /etc/network/interfaces.d/bat$bat
-echo "/etc/network/interfaces.d/bat"$bat" angelegt" 
+" > "/etc/network/interfaces.d/bat$bat.cfg"
+echo "/etc/network/interfaces.d/bat$bat.cfg angelegt" 
 
 #/etc/systemd/system/fastdbat"$bat".service
 
