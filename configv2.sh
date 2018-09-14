@@ -162,7 +162,7 @@ echo "/var/www/bat$bat/gateway angelegt"
 
 #Apache config laden:
 
-a2ensite /etc/apache2/sites-available/bat"$bat".conf
+a2ensite bat"$bat"
 systemctl reload apache2
 echo "Config für Apache neu geladen und Apache neu gestartet"
 
