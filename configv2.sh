@@ -1,7 +1,16 @@
 #!/bin/bash
 
+if [ "$(/usr/bin/id -u)" -ne 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
+
 conffile="/etc/hoods/$1.conf"
-[ -s "$conffile" ] || echo "Usage: $0 Hoodname " && exit
+if [ ! -s "$conffile" ]; then
+    echo "Usage: $0 Hoodname ";
+    exit 1;
+fi
+
 . "$conffile"
 
 #fe80 IPv6 holen:
@@ -68,7 +77,7 @@ secret \"90e9418a189e18f6a126a554081b445690a63752baa763ac26339c8742308144\";
 # (see MTU selection documentation)
 mtu 1426;
 on up \"/etc/fastd/fff.bat$bat/up.sh\";
-on post-down \"/etc/fastd/fff.bat$bat/down.sh\";
+on down \"/etc/fastd/fff.bat$bat/down.sh\";
 secure handshakes no;
 on verify \"true\";
 " > /etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf
@@ -78,7 +87,7 @@ echo "/etc/fastd/fff.bat"$bat"/fff.bat"$bat".conf angelegt"
 
 echo "#device: bat$bat
 iface bat$bat inet manual
-post-up ifconfig \$IFACE up
+    post-up ip link set dev \$IFACE up
     ##Einschalten post-up:
     # IP des Gateways am B.A.T.M.A.N interface:
     post-up ip addr add $ipv4 dev \$IFACE
@@ -97,17 +106,17 @@ post-up ifconfig \$IFACE up
     post-down ip route del $ipv4net dev \$IFACE table fff
     post-down ip -6 route del $ipv6net dev \$IFACE proto static table fff 
     post-down ip rule del iif \$IFACE table fff
-    post-down ifconfig \$IFACE down
+    post-down ip link set dev \$IFACE down
 
 # VPN Verbindung in die $Hoodname Hood
 iface $fastdinterfacename inet manual
     post-up batctl -m bat$bat if add \$IFACE
-    post-up ifconfig \$IFACE up
+    post-up ip link set dev \$IFACE up
     post-up ifup bat$bat
     post-down ifdown bat$bat
-    post-down ifconfig \$IFACE down
-" > /etc/network/interfaces.d/bat$bat
-echo "/etc/network/interfaces.d/bat"$bat" angelegt" 
+    post-down ip link set dev \$IFACE down
+" > "/etc/network/interfaces.d/bat$bat.cfg"
+echo "/etc/network/interfaces.d/bat$bat.cfg angelegt" 
 
 #/etc/systemd/system/fastdbat"$bat".service
 
@@ -147,6 +156,9 @@ echo "/var/www/bat$bat angelegt"
 
 sed -i '4i Listen '$httpport'' /etc/apache2/ports.conf
 echo "Port in /etc/apache2/ports.conf erweitert"
+
+echo "$(hostname)" > "/var/www/bat$bat/gateway"
+echo "/var/www/bat$bat/gateway angelegt"
 
 #Apache config laden:
 
@@ -194,7 +206,7 @@ echo "interface bat$bat {
         MaxRtrAdvInterval 300;
         AdvDefaultLifetime 600;
         AdvRASrcAddress {
-                $fe80; 
+                ${fe80%/*}; 
         };
         prefix $ipv6net {
                 AdvOnLink on;
@@ -237,18 +249,18 @@ echo "Alfred Service gestartet und enabled"
 #/etc/mrtg/dhcp.cfg
 
 echo "#!/bin/bash
-leasecount=$(cat /var/lib/misc/bat0.leases | wc -l)
-echo \"$leasecount\"
-echo \"$leasecount\"
+leasecount=\$(cat /var/lib/misc/bat0.leases | wc -l)
+echo \"\$leasecount\"
+echo \"\$leasecount\"
 echo 0
 echo 0" > /etc/mrtg/dhcpbat"$bat".sh
 chmod +x /etc/mrtg/dhcpbat"$bat".sh
 echo "/etc/mrtg/dhcpbat"$bat".sh angelegt und ausführbar gemacht"
 
 echo "#!/bin/bash
-gwlcount=$(/usr/sbin/batctl -m bat$bat gwl -H | wc -l)
-echo \"$gwlcount\"
-echo \"$gwlcount\"
+gwlcount=\$(/usr/sbin/batctl -m bat$bat gwl -H | wc -l)
+echo \"\$gwlcount\"
+echo \"\$gwlcount\"
 echo 0
 echo 0" > /etc/mrtg/gwlbat"$bat".sh
 chmod +x /etc/mrtg/gwlbat"$bat".sh
