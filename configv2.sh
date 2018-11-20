@@ -249,7 +249,7 @@ echo "Alfred Service gestartet und enabled"
 #/etc/mrtg/dhcp.cfg
 
 echo "#!/bin/bash
-leasecount=\$(cat /var/lib/misc/bat0.leases | wc -l)
+leasecount=\$(cat /var/lib/misc/bat$bat.leases | wc -l)
 echo \"\$leasecount\"
 echo \"\$leasecount\"
 echo 0
